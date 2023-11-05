@@ -1,4 +1,4 @@
-# Hackable Forum for ThM Room
+# Hackable Forum for a ThM Room
 
 
 ## Running the App
