@@ -11,9 +11,9 @@ services:
       - ./relational_db:/docker-entrypoint-initdb.d  
     entrypoint: docker-entrypoint.sh postgres -c max_connections=100
 
-  webserver:
+  website:
     image: nginx  
-    container_name: my-webserver-container
+    container_name: forum-website
     volumes:
       - ./app:/usr/share/nginx/html  
     ports:
