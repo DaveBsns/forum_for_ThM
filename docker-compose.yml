@@ -2,9 +2,11 @@ version: '3.1'
 services:
   postgres:
     image: postgres
-    container_name: my-postgres-container
+    container_name: postgres-db
     environment:
-      POSTGRES_PASSWORD: mysecretpassword
+      POSTGRES_PASSWORD: dbpw
+      POSTGRES_USER: postgres_user
+      POSTGRES_DB: postgres_docker
     ports:
       - "5432:5432"
     volumes:
@@ -17,4 +19,10 @@ services:
     volumes:
       - ./app:/usr/share/nginx/html  
     ports:
-      - "80:80" 
+      - "80:80"
+
+  nodejs-api:
+    build: .
+    container_name: nodejs-api
+    ports:
+      - "3000:3000" 
