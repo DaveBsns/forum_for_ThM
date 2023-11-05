@@ -1,0 +1,20 @@
+version: '3.1'
+services:
+  postgres:
+    image: postgres
+    container_name: my-postgres-container
+    environment:
+      POSTGRES_PASSWORD: mysecretpassword
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./relational_db:/docker-entrypoint-initdb.d  
+    entrypoint: docker-entrypoint.sh postgres -c max_connections=100
+
+  webserver:
+    image: nginx  
+    container_name: my-webserver-container
+    volumes:
+      - ./app:/usr/share/nginx/html  
+    ports:
+      - "80:80" 
