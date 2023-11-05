@@ -10,7 +10,7 @@
 3. Have Fun!
 
 
-## Postgresql Database
+## PostgreSQL Database
 
 The Database is running on `localhost:5432`.
 
