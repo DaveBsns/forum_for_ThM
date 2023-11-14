@@ -30,6 +30,30 @@ app.get('/api/users', (req, res) => {
         });
 });
 
+// Define an API endpoint to create a new user
+app.post('/api/users', async (req, res) => {
+    const { email, username, password } = req.body;
+
+    try {
+        // Check if the username or email is already taken
+        const existingUser = await db.oneOrNone('SELECT * FROM users WHERE username = $1 OR email = $2', [username, email]);
+
+        if (existingUser) {
+            res.status(400).json({ message: 'Username or email already taken.' });
+        } else {
+            // If the username and email are not taken, insert the new user into the database
+            const newUser = await db.one(
+                'INSERT INTO users (email, username, password) VALUES ($1, $2, $3) RETURNING id',
+                [email, username, password]
+            );
+
+            res.status(201).json({ message: 'User created successfully', userId: newUser.id });
+        }
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
 // Define an API endpoint for user authentication
 app.post('/api/authenticate', async (req, res) => {
     const { username, password } = req.body;

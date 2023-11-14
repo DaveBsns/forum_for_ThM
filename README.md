@@ -16,7 +16,7 @@
 
 The Database is running on `localhost:5432` in Docker container.
 
-To view the tables, open `localhost:5432` in pgadmin.^
+To view the tables, open `localhost:5432` in pgadmin.
 
 
 ## NodeJS Api
