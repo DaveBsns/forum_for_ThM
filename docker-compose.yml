@@ -17,7 +17,7 @@ services:
     image: nginx  
     container_name: forum-website
     volumes:
-      - ./app:/usr/share/nginx/html  
+      - ./app/website:/usr/share/nginx/html  
     ports:
       - "80:80"
 

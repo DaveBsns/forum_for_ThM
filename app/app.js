@@ -1,14 +1,21 @@
 const express = require('express');
+const jwt = require('jsonwebtoken');
 const bodyParser = require('body-parser');
 const pgp = require('pg-promise')();
 const cors = require('cors');
+// const path = require('path');
+
+
 const app = express();
+// app.use(express.json());
 
 // Use the cors middleware to enable CORS for all routes
 app.use(cors());
 
 // Configure body-parser to handle JSON data
 app.use(bodyParser.json());
+
+const secretKey = '1234Test1234';
 
 // Database connection configuration
 const db = pgp({
@@ -18,6 +25,18 @@ const db = pgp({
     port: 5432,
     database: 'postgres_docker'
 });
+
+// Serve static files from the public directory
+// app.use(express.static(path.join(__dirname, 'public')));
+
+// console.log("Dirname: "+__dirname);
+
+// Protected routes
+//app.get('/landing', (req, res) => {
+    // console.log('Accessing /index.html route');
+    // res.sendFile(path.join(__dirname, './public/index.html'));
+  // });
+
 
 // Define an API endpoint to retrieve user data
 app.get('/api/users', (req, res) => {
@@ -61,10 +80,16 @@ app.post('/api/authenticate', async (req, res) => {
     try {
         // Query the database to check if the user exists and the password is correct
         const user = await db.oneOrNone('SELECT * FROM users WHERE username = $1 AND password = $2', [username, password]);
-
+        console.log("Test");
         if (user) {
             // User is authenticated
-            res.json({ authenticated: true });
+            // res.json({ authenticated: true });
+            // Create a JWT token
+            const token = jwt.sign({ userId: user.id, username: user.username }, secretKey, { expiresIn: '3h' });
+            
+            // Send the token as a response
+            res.json({ token });
+
         } else {
             // Invalid username or password
             res.status(401).json({ authenticated: false, message: 'Invalid username or password.' });
@@ -73,6 +98,8 @@ app.post('/api/authenticate', async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
+
+
 
 // Start the API server
 const port = process.env.PORT || 3000;

@@ -8,7 +8,7 @@ WORKDIR /api
 COPY package*.json ./
 
 # Install the API dependencies
-RUN npm install express pg-promise body-parser cors
+RUN npm install express pg-promise body-parser cors jsonwebtoken cookie-parser
 
 # Copy the rest of the application code to the container
 COPY ./app/app.js /api
