@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", function() {
 
-
+	const cachedRoute = {}; // Create a cache object
+	
 	function dynamicallyAddScript(pathToScriptFromIndexHTMLPerpective) {
 		/*
 		// Assuming the existing script tag has an id "index-js-script"
@@ -17,15 +18,11 @@ document.addEventListener("DOMContentLoaded", function() {
 		document.body.appendChild(script);
 		*/
 		
-		const scriptElement = document.getElementById('added-script');
+		const scriptElement = document.getElementById('dynamically-loaded-script');
 		if (scriptElement) {
-			console.log("dynamic test 1122");
 			scriptElement.src = pathToScriptFromIndexHTMLPerpective;
 		}
-		
-
 	}
-	
 
 	// create document click that watches the nav links only
 	document.addEventListener("click", (e) => {
@@ -76,9 +73,7 @@ document.addEventListener("DOMContentLoaded", function() {
 		window.history.pushState({}, "", event.target.href);
 		urlLocationHandler();
 	};
-
-
-	const cachedRoute = {}; // Create a cache object
+	
 	
 
 	// Function to update the cached page
@@ -91,7 +86,6 @@ document.addEventListener("DOMContentLoaded", function() {
 		cachedRoute.description = route.description;
 		cachedRoute.template = route.template; // old -> html
 		cachedRoute.title = route.title;
-		console.log("description: "+cachedRoute.description + " title: "+ cachedRoute.title, " template: "+cachedRoute.template);
 	};
 
 	const urlLocationHandler = async () => {
@@ -101,7 +95,7 @@ document.addEventListener("DOMContentLoaded", function() {
 			location = "/";
 		}
 		// get the route object from the urlRoutes object
-		const route = urlRoutes[location] || urlRoutes["404"];
+		const route = urlRoutes[location] || urlRoutes["/"];
 		
 		if(route.template == cachedRoute.template){
 			return;
@@ -116,7 +110,6 @@ document.addEventListener("DOMContentLoaded", function() {
 			document
 				.querySelector('meta[name="description"]')
 				.setAttribute("content", route.description);
-			console.log("loading script...");
 			dynamicallyAddScript('./scripts/index.js');
 
 			const routeToCache = {
@@ -126,7 +119,6 @@ document.addEventListener("DOMContentLoaded", function() {
 			};
 			updateCachedRoute(routeToCache);
 		}
-		
 	};
 
 	// add an event listener to the window that watches for url changes

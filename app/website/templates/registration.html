@@ -10,6 +10,7 @@
     <div class="register-container">
         <h2>Registration</h2>
         <div id="error-message" class="error-message"></div>
+        <div id="success-message" class="success-message"></div>
         <form id="register-form" method="post">
             <div class="form-group">
                 <label for="email">E-Mail</label>
@@ -23,7 +24,7 @@
                 <label for="password">Password</label>
                 <input type="password" id="register_password" name="password" required>
             </div>
-            <button type="submit" class="register-button">Register</button>
+            <input type="submit" class="register-button" onclick="register()" value="Register">
         </form>
         <p class="login-link">You already have an account? <a href="/login">Login here</a></p>
     </div>
