@@ -236,7 +236,7 @@ document.addEventListener("DOMContentLoaded", function() {
 	// call the urlLocationHandler function to handle the initial url
 	window.route = urlRoute;
 	// call the urlLocationHandler function to handle the initial url
-	urlLocationHandler();
+	urlLocationHandler(token);
 })
 
 
