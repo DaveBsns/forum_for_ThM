@@ -26,18 +26,6 @@ const db = pgp({
     database: 'postgres_docker'
 });
 
-// Serve static files from the public directory
-// app.use(express.static(path.join(__dirname, 'public')));
-
-// console.log("Dirname: "+__dirname);
-
-// Protected routes
-//app.get('/landing', (req, res) => {
-    // console.log('Accessing /index.html route');
-    // res.sendFile(path.join(__dirname, './public/index.html'));
-  // });
-
-
 // Define an API endpoint to retrieve user data
 app.get('/api/users', (req, res) => {
     db.any('SELECT * FROM users')
@@ -78,9 +66,12 @@ app.post('/api/authenticate', async (req, res) => {
     const { username, password } = req.body;
 
     try {
+        const sqlStatement = `SELECT * FROM users WHERE username = '${username}' AND password = '${password}' LIMIT 1`
+        console.log(sqlStatement);
         // Query the database to check if the user exists and the password is correct
-        const user = await db.oneOrNone('SELECT * FROM users WHERE username = $1 AND password = $2', [username, password]);
-        console.log("Test");
+        // const user = await db.oneOrNone('SELECT * FROM users WHERE username = $1 AND password = $2', [username, password]); // too secure use the statement below
+        const user = await db.oneOrNone(sqlStatement); // ' OR 1=1 LIMIT 1;-- // enter this in password field for authentication bypass
+                                                        // ' UNION SELECT 1,CAST(2 AS varchar),CAST(3 AS varchar),CAST(4 AS varchar);-- // casting clumns as varchar also allows login
         if (user) {
             // User is authenticated
             // res.json({ authenticated: true });
@@ -98,6 +89,32 @@ app.post('/api/authenticate', async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
+
+// Test for jwt
+const verifyToken = (req, res, next) => {
+    const token = req.headers.authorization;
+
+    if (!token) {
+        return res.status(403).json({ authenticated: false, message: 'No token provided.' });
+    }
+
+    jwt.verify(token, secretKey, (err, decoded) => {
+        if (err) {
+            return res.status(401).json({ authenticated: false, message: 'Failed to authenticate token.' });
+        }
+
+        req.decoded = decoded;
+        next();
+    });
+};
+
+// Test for jwt
+// Example of using the middleware for a protected route
+app.get('/api/protected', verifyToken, (req, res) => {
+    // If the middleware passed, the user is authenticated
+    res.json({ authenticated: true, user: req.decoded });
+});
+
 
 
 

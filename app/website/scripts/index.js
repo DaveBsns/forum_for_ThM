@@ -19,6 +19,8 @@ function donate() {
 
 }
 
+
+/*
 async function login() {
     const errorMessageContainer = document.getElementById('error-message');
     const usernameInput = document.getElementById('username').value;
@@ -44,6 +46,54 @@ async function login() {
 
         if (response.status === 200) {
             // Successful authentication
+            window.location.href = '/';
+            console.log("Authenticated Successfully");
+            // here should a authenticated user redirected to a file called landing_page.html
+        } else {
+            const data = await response.json();
+            errorMessageContainer.style.display = 'block';
+            errorMessageContainer.innerHTML = data.message || 'Invalid username or password.';
+        }
+    } catch (error) {
+        errorMessageContainer.style.display = 'block';
+        errorMessageContainer.innerHTML = 'An error occurred while authenticating.';
+        console.error(error);
+    }
+}
+*/
+
+// Test Login for jwt
+async function login() {
+    const errorMessageContainer = document.getElementById('error-message');
+    const usernameInput = document.getElementById('username').value;
+    const passwordInput = document.getElementById('password').value;
+    
+    if(errorMessageContainer){
+        errorMessageContainer.style.display = 'none';
+    }
+
+    const userData = {
+        username: usernameInput,
+        password: passwordInput
+    };
+
+    try {
+        const response = await fetch('http://localhost:3000/api/authenticate', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(userData)
+        });
+
+        if (response.status === 200) {
+            // Successful authentication
+            const data = await response.json();
+            
+            // Store the token securely (you may want to use HTTP-only cookies for security)
+            document.cookie = `token=${data.token}; path=/;`;
+
+
             window.location.href = '/';
             console.log("Authenticated Successfully");
             // here should a authenticated user redirected to a file called landing_page.html

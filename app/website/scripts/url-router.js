@@ -87,7 +87,7 @@ document.addEventListener("DOMContentLoaded", function() {
 		cachedRoute.template = route.template; // old -> html
 		cachedRoute.title = route.title;
 	};
-
+	/*
 	const urlLocationHandler = async () => {
 		const location = window.location.pathname; // get the url path
 		// if the path length is 0, set it to primary page route
@@ -99,7 +99,8 @@ document.addEventListener("DOMContentLoaded", function() {
 		
 		if(route.template == cachedRoute.template){
 			return;
-		}else {
+
+		}else{
 			// get the html from the template
 			const html = await fetch(route.template).then((response) => response.text());
 			// set the content of the content div to the html
@@ -110,7 +111,7 @@ document.addEventListener("DOMContentLoaded", function() {
 			document
 				.querySelector('meta[name="description"]')
 				.setAttribute("content", route.description);
-			dynamicallyAddScript('./scripts/index.js');
+			// dynamicallyAddScript('./scripts/index.js');
 
 			const routeToCache = {
 				description: route.description,
@@ -118,6 +119,115 @@ document.addEventListener("DOMContentLoaded", function() {
 				title: route.title,
 			};
 			updateCachedRoute(routeToCache);
+
+		}
+	};
+	*/
+
+
+	const urlLocationHandler = async (token) => {
+		const location = window.location.pathname; // get the url path
+		// if the path length is 0, set it to primary page route
+		if (location.length == 0) {
+			location = "/";
+		}
+		// get the route object from the urlRoutes object
+		const route = urlRoutes[location] || urlRoutes["/"];
+		
+		if(route.template == cachedRoute.template){
+			return;
+
+		}else{
+			console.log(route.template);
+			const routeToCache = {}
+			const html = await fetch(route.template).then((response) => response.text());
+
+			switch(route.template){
+				case "./templates/forum.html":
+					console.log("test forum");
+					// get the html from the template
+					
+					// set the content of the content div to the html
+					document.getElementById("content").innerHTML = html;
+					// set the title of the document to the title of the route
+					document.title = route.title;
+					// set the description of the document to the description of the route
+					document
+						.querySelector('meta[name="description"]')
+						.setAttribute("content", route.description);
+					// dynamicallyAddScript('./scripts/index.js');
+
+					routeToCache = {
+						description: route.description,
+						template: route.template,
+						title: route.title,
+					};
+					updateCachedRoute(routeToCache);
+					break;
+				case "./templates/login.html":
+					console.log("test login");
+					// get the html from the template
+					
+					// set the content of the content div to the html
+					document.getElementById("content").innerHTML = html;
+					// set the title of the document to the title of the route
+					document.title = route.title;
+					// set the description of the document to the description of the route
+					document
+						.querySelector('meta[name="description"]')
+						.setAttribute("content", route.description);
+					// dynamicallyAddScript('./scripts/index.js');
+
+					routeToCache = {
+						description: route.description,
+						template: route.template,
+						title: route.title,
+					};
+					updateCachedRoute(routeToCache);
+					break;
+				case "./templates/profile.html":
+					console.log("test profile");
+					// Test jwt
+					if(token){
+						fetch('/api/protected', {
+							method: 'GET',
+							headers: {
+								'Authorization': `Bearer ${token}`,
+							},
+						})
+						.then(response => response.json())
+						.then(data => console.log(data))
+						.catch(error => console.error('Error1:', error));
+						// Test jwt end
+						// get the html from the template
+						
+						// set the content of the content div to the html
+						document.getElementById("content").innerHTML = html;
+						// set the title of the document to the title of the route
+						document.title = route.title;
+						// set the description of the document to the description of the route
+						document
+							.querySelector('meta[name="description"]')
+							.setAttribute("content", route.description);
+						// dynamicallyAddScript('./scripts/index.js');
+
+						routeToCache = {
+							description: route.description,
+							template: route.template,
+							title: route.title,
+						};
+						updateCachedRoute(routeToCache);
+						}else {
+							console.error("Token is not defined :(.");
+						}	
+						break;
+				case "./templates/register.html":
+					break;
+				case "./templates/donate.html":
+					break;
+			}
+			
+
 		}
 	};
 
@@ -128,3 +238,27 @@ document.addEventListener("DOMContentLoaded", function() {
 	// call the urlLocationHandler function to handle the initial url
 	urlLocationHandler();
 })
+
+
+
+
+
+
+/**
+ * 
+ * console.log(route.template);
+			// Test jwt
+			// Example of using fetch with the stored token for a protected route
+			if (route.template = "./templates/profile.html"){
+				fetch('/api/protected', {
+					method: 'GET',
+					headers: {
+						'Authorization': `Bearer ${token}`,
+					},
+				})
+				.then(response => response.json())
+				.then(data => console.log(data))
+				.catch(error => console.error('Error1:', error));
+				// Test jwt end
+			}
+ */
