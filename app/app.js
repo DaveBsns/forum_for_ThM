@@ -110,9 +110,12 @@ const verifyToken = (req, res, next) => {
 
 // Test for jwt
 // Example of using the middleware for a protected route
-app.get('/api/protected', verifyToken, (req, res) => {
+app.get('/profile', verifyToken, (req, res) => {
     // If the middleware passed, the user is authenticated
-    res.json({ authenticated: true, user: req.decoded });
+    res.json({ 
+        text: "This is Protected",
+        authenticated: true, 
+        user: req.decoded });
 });
 
 

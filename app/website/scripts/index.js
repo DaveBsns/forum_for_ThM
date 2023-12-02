@@ -89,12 +89,13 @@ async function login() {
         if (response.status === 200) {
             // Successful authentication
             const data = await response.json();
-            
+            console.log("Data!!!!: "+data)
             // Store the token securely (you may want to use HTTP-only cookies for security)
             document.cookie = `token=${data.token}; path=/;`;
 
 
-            window.location.href = '/';
+            //window.location.href = '/'; // uncomment later
+            console.log(document.cookie);
             console.log("Authenticated Successfully");
             // here should a authenticated user redirected to a file called landing_page.html
         } else {

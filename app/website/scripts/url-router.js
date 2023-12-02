@@ -125,7 +125,7 @@ document.addEventListener("DOMContentLoaded", function() {
 	*/
 
 
-	const urlLocationHandler = async (token) => {
+	const urlLocationHandler = async () => {
 		const location = window.location.pathname; // get the url path
 		// if the path length is 0, set it to primary page route
 		if (location.length == 0) {
@@ -138,96 +138,24 @@ document.addEventListener("DOMContentLoaded", function() {
 			return;
 
 		}else{
-			console.log(route.template);
-			const routeToCache = {}
+			// get the html from the template
 			const html = await fetch(route.template).then((response) => response.text());
+			// set the content of the content div to the html
+			document.getElementById("content").innerHTML = html;
+			// set the title of the document to the title of the route
+			document.title = route.title;
+			// set the description of the document to the description of the route
+			document
+				.querySelector('meta[name="description"]')
+				.setAttribute("content", route.description);
+			// dynamicallyAddScript('./scripts/index.js');
 
-			switch(route.template){
-				case "./templates/forum.html":
-					console.log("test forum");
-					// get the html from the template
-					
-					// set the content of the content div to the html
-					document.getElementById("content").innerHTML = html;
-					// set the title of the document to the title of the route
-					document.title = route.title;
-					// set the description of the document to the description of the route
-					document
-						.querySelector('meta[name="description"]')
-						.setAttribute("content", route.description);
-					// dynamicallyAddScript('./scripts/index.js');
-
-					routeToCache = {
-						description: route.description,
-						template: route.template,
-						title: route.title,
-					};
-					updateCachedRoute(routeToCache);
-					break;
-				case "./templates/login.html":
-					console.log("test login");
-					// get the html from the template
-					
-					// set the content of the content div to the html
-					document.getElementById("content").innerHTML = html;
-					// set the title of the document to the title of the route
-					document.title = route.title;
-					// set the description of the document to the description of the route
-					document
-						.querySelector('meta[name="description"]')
-						.setAttribute("content", route.description);
-					// dynamicallyAddScript('./scripts/index.js');
-
-					routeToCache = {
-						description: route.description,
-						template: route.template,
-						title: route.title,
-					};
-					updateCachedRoute(routeToCache);
-					break;
-				case "./templates/profile.html":
-					console.log("test profile");
-					// Test jwt
-					if(token){
-						fetch('/api/protected', {
-							method: 'GET',
-							headers: {
-								'Authorization': `Bearer ${token}`,
-							},
-						})
-						.then(response => response.json())
-						.then(data => console.log(data))
-						.catch(error => console.error('Error1:', error));
-						// Test jwt end
-						// get the html from the template
-						
-						// set the content of the content div to the html
-						document.getElementById("content").innerHTML = html;
-						// set the title of the document to the title of the route
-						document.title = route.title;
-						// set the description of the document to the description of the route
-						document
-							.querySelector('meta[name="description"]')
-							.setAttribute("content", route.description);
-						// dynamicallyAddScript('./scripts/index.js');
-
-						routeToCache = {
-							description: route.description,
-							template: route.template,
-							title: route.title,
-						};
-						updateCachedRoute(routeToCache);
-						}else {
-							console.error("Token is not defined :(.");
-						}	
-						break;
-				case "./templates/register.html":
-					break;
-				case "./templates/donate.html":
-					break;
-			}
-			
-
+			routeToCache = {
+				description: route.description,
+				template: route.template,
+				title: route.title,
+			};
+			updateCachedRoute(routeToCache);
 		}
 	};
 
@@ -236,7 +164,7 @@ document.addEventListener("DOMContentLoaded", function() {
 	// call the urlLocationHandler function to handle the initial url
 	window.route = urlRoute;
 	// call the urlLocationHandler function to handle the initial url
-	urlLocationHandler(token);
+	urlLocationHandler();
 })
 
 
