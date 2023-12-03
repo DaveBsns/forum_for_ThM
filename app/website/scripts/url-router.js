@@ -1,3 +1,7 @@
+/**
+ * Just backup for the url-routing in the frontend
+ * the current frontend routing functionality is implemented in the index.js
+ */
 document.addEventListener("DOMContentLoaded", function() {
 
 	const cachedRoute = {}; // Create a cache object
@@ -166,10 +170,6 @@ document.addEventListener("DOMContentLoaded", function() {
 	// call the urlLocationHandler function to handle the initial url
 	urlLocationHandler();
 })
-
-
-
-
 
 
 /**
