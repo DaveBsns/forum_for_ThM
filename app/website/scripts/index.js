@@ -41,6 +41,21 @@ document.addEventListener("DOMContentLoaded", function() {
 			title: "Bitcoin Donation Page",
 			description: "This is the bitcoin donation page",
 		},
+        "/wallet": {
+			template: "./templates/wallet_login.html",
+			title: "Bitcoin Wallet Management Page Login",
+			description: "This is the login to the bitcoin wallet management page",
+		},
+        "/flag": {
+			template: "./templates/wallet_flag.html",
+			title: "Bitcoin Wallet Management Page",
+			description: "Success!!",
+		},
+        "/logout": {
+			template: "./templates/logout.html",
+			title: "Logout",
+			description: "This is the logout page",
+		},
 	};
 
 	// create a function that watches the url and calls the urlLocationHandler
@@ -116,6 +131,42 @@ document.addEventListener("DOMContentLoaded", function() {
                         updateCachedRoute(routeToCache);
                     }
                     break;
+                case "./templates/wallet_login.html":
+                    if(document.cookie){
+                        // set the content of the content div to the html
+                        document.getElementById("content").innerHTML = html;
+                        // set the title of the document to the title of the route
+                        document.title = route.title;
+                        // set the description of the document to the description of the route
+                        document
+                            .querySelector('meta[name="description"]')
+                            .setAttribute("content", route.description);
+                        routeToCache = {
+                            description: route.description,
+                            template: route.template,
+                            title: route.title,
+                        };
+                        updateCachedRoute(routeToCache);
+                    }
+                    break;
+                case "./templates/wallet_flag.html":
+                    if(document.cookie){
+                        // set the content of the content div to the html
+                        document.getElementById("content").innerHTML = html;
+                        // set the title of the document to the title of the route
+                        document.title = route.title;
+                        // set the description of the document to the description of the route
+                        document
+                            .querySelector('meta[name="description"]')
+                            .setAttribute("content", route.description);
+                        routeToCache = {
+                            description: route.description,
+                            template: route.template,
+                            title: route.title,
+                        };
+                        updateCachedRoute(routeToCache);
+                    }
+                    break;
                 default:
                     // set the content of the content div to the html
                     document.getElementById("content").innerHTML = html;
@@ -168,49 +219,6 @@ function donate() {
 
 }
 
-
-/*
-async function login() {
-    const errorMessageContainer = document.getElementById('error-message');
-    const usernameInput = document.getElementById('username').value;
-    const passwordInput = document.getElementById('password').value;
-    
-    if(errorMessageContainer){
-        errorMessageContainer.style.display = 'none';
-    }
-
-    const userData = {
-        username: usernameInput,
-        password: passwordInput
-    };
-
-    try {
-        const response = await fetch('http://localhost:3000/api/authenticate', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(userData)
-        });
-
-        if (response.status === 200) {
-            // Successful authentication
-            window.location.href = '/';
-            console.log("Authenticated Successfully");
-            // here should a authenticated user redirected to a file called landing_page.html
-        } else {
-            const data = await response.json();
-            errorMessageContainer.style.display = 'block';
-            errorMessageContainer.innerHTML = data.message || 'Invalid username or password.';
-        }
-    } catch (error) {
-        errorMessageContainer.style.display = 'block';
-        errorMessageContainer.innerHTML = 'An error occurred while authenticating.';
-        console.error(error);
-    }
-}
-*/
-
 // Test Login for jwt
 async function login() {
     const errorMessageContainer = document.getElementById('error-message');
@@ -238,12 +246,11 @@ async function login() {
         if (response.status === 200) {
             // Successful authentication
             const data = await response.json();
-            console.log("Data!!!!: "+data)
             // Store the token securely (you may want to use HTTP-only cookies for security)
             document.cookie = `token=${data.token}; path=/;`;
 
 
-            //window.location.href = '/'; // uncomment later
+            window.location.href = '/'; // uncomment later
             console.log(document.cookie);
             console.log("Authenticated Successfully");
             // here should a authenticated user redirected to a file called landing_page.html
@@ -257,6 +264,11 @@ async function login() {
         errorMessageContainer.innerHTML = 'An error occurred while authenticating.';
         console.error(error);
     }
+}
+
+async function logout() {
+    // Set the token cookie's expiration to a past date
+    document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
 }
 
 
