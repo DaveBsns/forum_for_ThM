@@ -90,6 +90,22 @@ app.post('/api/authenticate', async (req, res) => {
     }
 });
 
+// Define an API endpoint for user authentication
+app.post('/api/authmaster', async (req, res) => {
+    const { password } = req.body;
+
+    try {
+        const sqlStatement = `SELECT * FROM masters WHERE master_password = '${password}' LIMIT 1`
+        console.log(sqlStatement);
+        // Query the database to check if the user exists and the password is correct
+        // const user = await db.oneOrNone('SELECT * FROM users WHERE username = $1 AND password = $2', [username, password]); // too secure use the statement below
+        const master = await db.oneOrNone(sqlStatement); 
+                                                        
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
 // Test for jwt
 const verifyToken = (req, res, next) => {
     const token = req.headers.authorization;

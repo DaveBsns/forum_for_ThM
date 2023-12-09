@@ -1,4 +1,6 @@
 document.addEventListener("DOMContentLoaded", function() {
+    loggedOutLinks();
+
 
 	const cachedRoute = {}; // Create a cache object
 
@@ -249,8 +251,10 @@ async function login() {
             // Store the token securely (you may want to use HTTP-only cookies for security)
             document.cookie = `token=${data.token}; path=/;`;
 
+            loggedInLinks();
 
-            window.location.href = '/'; // uncomment later
+
+            //window.location.href = '/'; // uncomment later
             console.log(document.cookie);
             console.log("Authenticated Successfully");
             // here should a authenticated user redirected to a file called landing_page.html
@@ -266,9 +270,49 @@ async function login() {
     }
 }
 
+// Test Login for jwt
+async function loginMaster() {
+    const errorMessageContainer = document.getElementById('error-message');
+    const passwordMasterInput = document.getElementById('password-master').value;
+    
+    if(errorMessageContainer){
+        errorMessageContainer.style.display = 'none';
+    }
+
+    const userData = {
+        password: passwordMasterInput
+    };
+
+    try {
+        const response = await fetch('http://localhost:3000/api/authmaster', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(userData)
+        });
+
+        if (response.status === 200) {
+            // Successful authentication
+            const data = await response.json();
+            console.log("Successfully logged in to bitcoin wallet!")
+
+        } else {
+            const data = await response.json();
+            errorMessageContainer.style.display = 'block';
+            errorMessageContainer.innerHTML = data.message || 'Invalid username or password.';
+        }
+    } catch (error) {
+        errorMessageContainer.style.display = 'block';
+        errorMessageContainer.innerHTML = 'An error occurred while authenticating.';
+        console.error(error);
+    }
+}
+
 async function logout() {
     // Set the token cookie's expiration to a past date
     document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+    loggedOutLinks();
 }
 
 
@@ -320,6 +364,22 @@ async function register() {
         errorMessageContainer.innerHTML = 'An error occurred while authenticating.';
         console.error(error);
     }
+}
+
+
+function loggedInLinks() {
+    document.getElementById("forum-link").style.display = "block";
+    document.getElementById("profile-link").style.display = "block";
+    document.getElementById("login-link").style.display = "none";
+    document.getElementById("logout-link").style.display = "block";
+
+}
+
+function loggedOutLinks() {
+    document.getElementById("forum-link").style.display = "block";
+    document.getElementById("profile-link").style.display = "none";
+    document.getElementById("login-link").style.display = "block";
+    document.getElementById("logout-link").style.display = "none";
 }
 
 

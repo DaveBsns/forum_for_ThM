@@ -1,22 +1,11 @@
-<div class="header">
-    <h1>SQL Forum</h1>
-    <nav class="header-buttons">
-        <a href="/">Forum</a>
-        <a href="/profile">Profile</a>
-        <a href="/login">Login</a>
-        <a href="/logout" onclick="logout()">Logout</a>
-    </nav>
-</div>
-
-
 <div class="login-container">
     <h2>Bitcoin Wallet Management - Login</h2>
     <div id="error-message" class="error-message"></div>
     <form id="login-form">
         <div class="form-group">
-            <label for="password">Master Password</label>
-            <input type="password" id="password" name="password" required>
+            <label for="password-master">Master Password</label>
+            <input type="password" id="password-master" name="password" required>
         </div>
-        <input type="submit" class="login-button" onclick="login()" value="Login">
+        <input type="submit" class="login-button" onclick="loginMaster()" value="Login">
     </form>
 </div>
