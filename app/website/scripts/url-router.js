@@ -67,6 +67,21 @@ document.addEventListener("DOMContentLoaded", function() {
 			title: "Bitcoin Donation Page",
 			description: "This is the bitcoin donation page",
 		},
+        "/wallet": {
+			template: "./templates/wallet_login.html",
+			title: "Bitcoin Wallet Management Page Login",
+			description: "This is the login to the bitcoin wallet management page",
+		},
+        "/flag": {
+			template: "./templates/wallet_flag.html",
+			title: "Bitcoin Wallet Management Page",
+			description: "Success!!",
+		},
+        "/logout": {
+			template: "./templates/logout.html",
+			title: "Logout",
+			description: "This is the logout page",
+		},
 	};
 
 	// create a function that watches the url and calls the urlLocationHandler
@@ -78,55 +93,13 @@ document.addEventListener("DOMContentLoaded", function() {
 		urlLocationHandler();
 	};
 	
-	
-
 	// Function to update the cached page
 	const updateCachedRoute = async (route) => {
-		// Fetch the HTML content for the new route
-		// const response = await fetch(route.template);
-		//const html = await response.text();
-
 		// Update the cachedRoute object
 		cachedRoute.description = route.description;
 		cachedRoute.template = route.template; // old -> html
 		cachedRoute.title = route.title;
 	};
-	/*
-	const urlLocationHandler = async () => {
-		const location = window.location.pathname; // get the url path
-		// if the path length is 0, set it to primary page route
-		if (location.length == 0) {
-			location = "/";
-		}
-		// get the route object from the urlRoutes object
-		const route = urlRoutes[location] || urlRoutes["/"];
-		
-		if(route.template == cachedRoute.template){
-			return;
-
-		}else{
-			// get the html from the template
-			const html = await fetch(route.template).then((response) => response.text());
-			// set the content of the content div to the html
-			document.getElementById("content").innerHTML = html;
-			// set the title of the document to the title of the route
-			document.title = route.title;
-			// set the description of the document to the description of the route
-			document
-				.querySelector('meta[name="description"]')
-				.setAttribute("content", route.description);
-			// dynamicallyAddScript('./scripts/index.js');
-
-			const routeToCache = {
-				description: route.description,
-				template: route.template,
-				title: route.title,
-			};
-			updateCachedRoute(routeToCache);
-
-		}
-	};
-	*/
 
 
 	const urlLocationHandler = async () => {
@@ -142,24 +115,101 @@ document.addEventListener("DOMContentLoaded", function() {
 			return;
 
 		}else{
-			// get the html from the template
-			const html = await fetch(route.template).then((response) => response.text());
-			// set the content of the content div to the html
-			document.getElementById("content").innerHTML = html;
-			// set the title of the document to the title of the route
-			document.title = route.title;
-			// set the description of the document to the description of the route
-			document
-				.querySelector('meta[name="description"]')
-				.setAttribute("content", route.description);
-			// dynamicallyAddScript('./scripts/index.js');
+            // get the html from the template
+            const html = await fetch(route.template).then((response) => response.text());
 
-			routeToCache = {
-				description: route.description,
-				template: route.template,
-				title: route.title,
-			};
-			updateCachedRoute(routeToCache);
+            // defining the protected routes
+            switch(route.template){
+                case "./templates/profile.html":
+                    if(document.cookie){
+                        // set the content of the content div to the html
+                        document.getElementById("content").innerHTML = html;
+                        // set the title of the document to the title of the route
+                        document.title = route.title;
+                        // set the description of the document to the description of the route
+                        document
+                            .querySelector('meta[name="description"]')
+                            .setAttribute("content", route.description);
+                        routeToCache = {
+                            description: route.description,
+                            template: route.template,
+                            title: route.title,
+                        };
+                        updateCachedRoute(routeToCache);
+                    }
+                    break;
+
+                case "./templates/donation.html":
+                    if(document.cookie){
+                        // set the content of the content div to the html
+                        document.getElementById("content").innerHTML = html;
+                        // set the title of the document to the title of the route
+                        document.title = route.title;
+                        // set the description of the document to the description of the route
+                        document
+                            .querySelector('meta[name="description"]')
+                            .setAttribute("content", route.description);
+                        routeToCache = {
+                            description: route.description,
+                            template: route.template,
+                            title: route.title,
+                        };
+                        updateCachedRoute(routeToCache);
+                    }
+                    break;
+                case "./templates/wallet_login.html":
+                    if(document.cookie){
+                        // set the content of the content div to the html
+                        document.getElementById("content").innerHTML = html;
+                        // set the title of the document to the title of the route
+                        document.title = route.title;
+                        // set the description of the document to the description of the route
+                        document
+                            .querySelector('meta[name="description"]')
+                            .setAttribute("content", route.description);
+                        routeToCache = {
+                            description: route.description,
+                            template: route.template,
+                            title: route.title,
+                        };
+                        updateCachedRoute(routeToCache);
+                    }
+                    break;
+                case "./templates/wallet_flag.html":
+                    if(document.cookie){
+                        // set the content of the content div to the html
+                        document.getElementById("content").innerHTML = html;
+                        // set the title of the document to the title of the route
+                        document.title = route.title;
+                        // set the description of the document to the description of the route
+                        document
+                            .querySelector('meta[name="description"]')
+                            .setAttribute("content", route.description);
+                        routeToCache = {
+                            description: route.description,
+                            template: route.template,
+                            title: route.title,
+                        };
+                        updateCachedRoute(routeToCache);
+                    }
+                    break;
+                default:
+                    // set the content of the content div to the html
+                    document.getElementById("content").innerHTML = html;
+                    // set the title of the document to the title of the route
+                    document.title = route.title;
+                    // set the description of the document to the description of the route
+                    document
+                        .querySelector('meta[name="description"]')
+                        .setAttribute("content", route.description);
+                    routeToCache = {
+                        description: route.description,
+                        template: route.template,
+                        title: route.title,
+                    };
+                    updateCachedRoute(routeToCache);
+                    break;
+            }
 		}
 	};
 
@@ -169,24 +219,4 @@ document.addEventListener("DOMContentLoaded", function() {
 	window.route = urlRoute;
 	// call the urlLocationHandler function to handle the initial url
 	urlLocationHandler();
-})
-
-
-/**
- * 
- * console.log(route.template);
-			// Test jwt
-			// Example of using fetch with the stored token for a protected route
-			if (route.template = "./templates/profile.html"){
-				fetch('/api/protected', {
-					method: 'GET',
-					headers: {
-						'Authorization': `Bearer ${token}`,
-					},
-				})
-				.then(response => response.json())
-				.then(data => console.log(data))
-				.catch(error => console.error('Error1:', error));
-				// Test jwt end
-			}
- */
+});

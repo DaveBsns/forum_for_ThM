@@ -1,21 +1,21 @@
 document.addEventListener("DOMContentLoaded", function() {
     loggedOutLinks();
 
-
+    
 	const cachedRoute = {}; // Create a cache object
 
 	// create document click that watches the nav links only
 	document.addEventListener("click", (e) => {
 		const { target } = e;
-		/* 
-		if (!target.matches("nav a")) {  // Just use this if you want the single page navigation only between a navbar.
-			return;
-		}
-		*/
+		 
+		//if (!target.matches("nav a")) {  // Just use this if you want the single page navigation only between a navbar.
+		//	return;
+		//}
+		
 		e.preventDefault();
 		urlRoute();
 	});
-
+    
 	// create an object that maps the url to the template, title, and description
 	const urlRoutes = {
 		"/": {
@@ -61,7 +61,8 @@ document.addEventListener("DOMContentLoaded", function() {
 	};
 
 	// create a function that watches the url and calls the urlLocationHandler
-	const urlRoute = (event) => {
+    window.urlRoute = (event) => {
+	// const urlRoute = (event) => {
 		event = event || window.event; // get window.event if event argument not provided
 		event.preventDefault();
 		// window.history.pushState(state, unused, target link);
@@ -70,6 +71,7 @@ document.addEventListener("DOMContentLoaded", function() {
 	};
 	
 	// Function to update the cached page
+    // window.updateCachedRoute = async (route) => {
 	const updateCachedRoute = async (route) => {
 		// Update the cachedRoute object
 		cachedRoute.description = route.description;
@@ -77,8 +79,8 @@ document.addEventListener("DOMContentLoaded", function() {
 		cachedRoute.title = route.title;
 	};
 
-
-	const urlLocationHandler = async () => {
+    window.urlLocationHandler = async () => {
+	// const urlLocationHandler = async () => {
 		const location = window.location.pathname; // get the url path
 		// if the path length is 0, set it to primary page route
 		if (location.length == 0) {
@@ -97,25 +99,6 @@ document.addEventListener("DOMContentLoaded", function() {
             // defining the protected routes
             switch(route.template){
                 case "./templates/profile.html":
-                    if(document.cookie){
-                        // set the content of the content div to the html
-                        document.getElementById("content").innerHTML = html;
-                        // set the title of the document to the title of the route
-                        document.title = route.title;
-                        // set the description of the document to the description of the route
-                        document
-                            .querySelector('meta[name="description"]')
-                            .setAttribute("content", route.description);
-                        routeToCache = {
-                            description: route.description,
-                            template: route.template,
-                            title: route.title,
-                        };
-                        updateCachedRoute(routeToCache);
-                    }
-                    break;
-
-                case "./templates/donation.html":
                     if(document.cookie){
                         // set the content of the content div to the html
                         document.getElementById("content").innerHTML = html;
@@ -195,6 +178,7 @@ document.addEventListener("DOMContentLoaded", function() {
 	window.route = urlRoute;
 	// call the urlLocationHandler function to handle the initial url
 	urlLocationHandler();
+    
 })
 
 
@@ -253,9 +237,11 @@ async function login() {
 
             loggedInLinks();
 
+            // Redirect the user to the profile page after successful Login
+            window.history.pushState({}, "", '/profile');
+            urlLocationHandler();
 
-            //window.location.href = '/'; // uncomment later
-            console.log(document.cookie);
+            // console.log(document.cookie);
             console.log("Authenticated Successfully");
             // here should a authenticated user redirected to a file called landing_page.html
         } else {
@@ -295,6 +281,11 @@ async function loginMaster() {
         if (response.status === 200) {
             // Successful authentication
             const data = await response.json();
+
+            // Redirect the user to the profile page after successful Login
+            window.history.pushState({}, "", '/flag');
+            urlLocationHandler();
+
             console.log("Successfully logged in to bitcoin wallet!")
 
         } else {
@@ -337,6 +328,8 @@ async function register() {
     };
 
     try {
+        // Registration deactivated for this purpose
+        /*
         const response = await fetch('http://localhost:3000/api/users', {
             method: 'POST',
             headers: {
@@ -358,10 +351,15 @@ async function register() {
             const data = await response.json();
             errorMessageContainer.style.display = 'block';
             errorMessageContainer.innerHTML = data.message || 'Invalid username or password.';
-        }
+        }*/
+
+        // Added this because registration is deactivated
+        errorMessageContainer.style.display = 'block';
+        errorMessageContainer.innerHTML = 'Pretty sure you dont need this function to get access to the forum ;).';
+
     } catch (error) {
         errorMessageContainer.style.display = 'block';
-        errorMessageContainer.innerHTML = 'An error occurred while authenticating.';
+        errorMessageContainer.innerHTML = 'An error occurred while registration.';
         console.error(error);
     }
 }
@@ -381,6 +379,4 @@ function loggedOutLinks() {
     document.getElementById("login-link").style.display = "block";
     document.getElementById("logout-link").style.display = "none";
 }
-
-
 
