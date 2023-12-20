@@ -185,6 +185,18 @@ body {
     text-align: center;
 }
 
+#response-container {
+    background-color: #d3d3d3;
+    height: 200px;
+    box-shadow: 1px 1px 1px 1px darkgrey;
+}
+
+#response-master-container {
+    background-color: #d3d3d3;
+    height: 200px;
+    box-shadow: 1px 1px 1px 1px darkgrey;
+}
+
 #total-bitcoins {
     font-size: 24px;
     color: #27ae60;

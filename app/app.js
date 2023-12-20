@@ -67,23 +67,30 @@ app.post('/api/authenticate', async (req, res) => {
 
     try {
         const sqlStatement = `SELECT * FROM users WHERE username = '${username}' AND password = '${password}' LIMIT 1`
-        console.log(sqlStatement);
+        // console.log(sqlStatement);
         // Query the database to check if the user exists and the password is correct
         // const user = await db.oneOrNone('SELECT * FROM users WHERE username = $1 AND password = $2', [username, password]); // too secure use the statement below
-        const user = await db.oneOrNone(sqlStatement); // ' OR 1=1 LIMIT 1;-- // enter this in password field for authentication bypass
-                                                        // ' UNION SELECT 1,CAST(2 AS varchar),CAST(3 AS varchar),CAST(4 AS varchar);-- // casting clumns as varchar also allows login
-        if (user) {
-            // User is authenticated
-            // res.json({ authenticated: true });
-            // Create a JWT token
-            const token = jwt.sign({ userId: user.id, username: user.username }, secretKey, { expiresIn: '3h' });
-            
-            // Send the token as a response
-            res.json({ token });
+        try{
+            const user = await db.oneOrNone(sqlStatement); // ' OR 1=1 LIMIT 1;-- // enter this in password field for authentication bypass
+                                                        // ' UNION SELECT 1,CAST(2 AS varchar),CAST(3 AS varchar),CAST(4 AS varchar);-- // casting clumns as varchar also allows login -> for the initial login page
+                                                        // ' UNION SELECT 1,2,CAST(3 as varchar);-- // sql injection to bypass the master password -> for the wallet page login
 
-        } else {
-            // Invalid username or password
-            res.status(401).json({ authenticated: false, message: 'Invalid username or password.' });
+            if (user) {
+                // User is authenticated
+                // res.json({ authenticated: true });
+                // Create a JWT token
+                const token = jwt.sign({ userId: user.id, username: user.username }, secretKey, { expiresIn: '3h' });
+                
+                // Send the token as a response
+                res.json({ token });
+
+            } else {
+                // Invalid username or password
+                res.status(401).json({ authenticated: false, message: 'Invalid username or password.', query: sqlStatement, response: user });
+                
+            }
+        } catch (error) {
+            res.status(500).json({ error: error.message, query: sqlStatement });
         }
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -99,16 +106,19 @@ app.post('/api/authmaster', async (req, res) => {
         
         // Query the database to check if the user exists and the password is correct
         // const user = await db.oneOrNone('SELECT * FROM users WHERE username = $1 AND password = $2', [username, password]); // too secure use the statement below
-        const master = await db.oneOrNone(sqlStatement); 
-        if (master) {
-            // Master is authenticated
-            res.status(200).json({ authenticated: true });
-            console.log("Master is authenticated");
-        } else {
-            // Invalid username or password
-            res.status(401).json({ authenticated: false, message: 'Invalid Master password.' });
-        }
-                                                        
+        try{
+            const master = await db.oneOrNone(sqlStatement); 
+            if (master) {
+                // Master is authenticated
+                res.status(200).json({ authenticated: true });
+                console.log("Master is authenticated");
+            } else {
+                // Invalid username or password
+                res.status(401).json({ authenticated: false, message: 'Invalid Master password.', query: sqlStatement, response: master});
+            }
+        } catch (error) {
+            res.status(500).json({ error: error.message, query: sqlStatement});
+        }                                                  
     } catch (error) {
         res.status(500).json({ error: error.message });
     }

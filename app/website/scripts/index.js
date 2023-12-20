@@ -210,6 +210,7 @@ async function login() {
     const errorMessageContainer = document.getElementById('error-message');
     const usernameInput = document.getElementById('username').value;
     const passwordInput = document.getElementById('password').value;
+    const sqlResponse = document.getElementById('sql-response');
     
     if(errorMessageContainer){
         errorMessageContainer.style.display = 'none';
@@ -248,11 +249,11 @@ async function login() {
             const data = await response.json();
             errorMessageContainer.style.display = 'block';
             errorMessageContainer.innerHTML = data.message || 'Invalid username or password.';
+            sqlResponse.innerHTML = JSON.stringify(data.query);
         }
     } catch (error) {
         errorMessageContainer.style.display = 'block';
         errorMessageContainer.innerHTML = 'An error occurred while authenticating.';
-        console.error(error);
     }
 }
 
@@ -260,6 +261,7 @@ async function login() {
 async function loginMaster() {
     const errorMessageContainer = document.getElementById('error-message');
     const passwordMasterInput = document.getElementById('password-master').value;
+    const sqlMasterResponse = document.getElementById('sql-master-response');
     
     if(errorMessageContainer){
         errorMessageContainer.style.display = 'none';
@@ -292,6 +294,7 @@ async function loginMaster() {
             const data = await response.json();
             errorMessageContainer.style.display = 'block';
             errorMessageContainer.innerHTML = data.message || 'Invalid username or password.';
+            sqlMasterResponse.innerHTML = JSON.stringify(data.query);
         }
     } catch (error) {
         errorMessageContainer.style.display = 'block';
