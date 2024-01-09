@@ -102,12 +102,11 @@ app.post('/api/authmaster', async (req, res) => {
     const { password } = req.body;
 
     try {
-        const sqlStatement = `SELECT * FROM masters WHERE master_password = '${password}' LIMIT 1`
+        const sqlStatement = `SELECT * FROM masters WHERE master_password = '${password}' LIMIT 1` 
         
-        // Query the database to check if the user exists and the password is correct
-        // const user = await db.oneOrNone('SELECT * FROM users WHERE username = $1 AND password = $2', [username, password]); // too secure use the statement below
         try{
-            const master = await db.oneOrNone(sqlStatement); 
+            const master = await db.oneOrNone(sqlStatement);
+            // const master = await db.oneOrNone('SELECT * FROM users WHERE password = $1 ', [password]); // try it also with this method for auth master // too secure use the statement below
             if (master) {
                 // Master is authenticated
                 res.status(200).json({ authenticated: true });
