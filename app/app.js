@@ -69,7 +69,7 @@ app.post('/api/users', async (req, res) => {
 });
 
 // Enable preflight for the /api/authenticate endpoint
-app.options('/api/authenticate', cors());  // Respond to OPTIONS requests
+//app.options('/api/authenticate', cors());  // Respond to OPTIONS requests
 
 // Define an API endpoint for user authentication
 app.post('/api/authenticate', async (req, res) => {
