@@ -12,7 +12,7 @@ const app = express();
 // Use the cors middleware to enable CORS for all routes
 app.use(cors({
     origin: '*',
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    methods: '*',
     credentials: true,
 }));
 
