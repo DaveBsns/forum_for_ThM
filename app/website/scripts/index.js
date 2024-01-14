@@ -1,7 +1,5 @@
 document.addEventListener("DOMContentLoaded", function() {
     loggedOutLinks();
-
-    console.log("v66");
     
 	const cachedRoute = {}; // Create a cache object
 
@@ -212,6 +210,11 @@ async function login() {
     const usernameInput = document.getElementById('username').value;
     const passwordInput = document.getElementById('password').value;
     const sqlResponse = document.getElementById('sql-response');
+
+    // Get the base URL
+    const baseURL = window.location.origin;
+
+    console.log(baseURL);
     
     if(errorMessageContainer){
         errorMessageContainer.style.display = 'none';
@@ -223,7 +226,7 @@ async function login() {
     };
 
     try {
-        const response = await fetch('http://host.docker.internal:3000/api/authenticate', { // 'http://localhost:3000/api/authenticate'
+        const response = await fetch(baseURL+':3000/api/authenticate', { // 'http://localhost:3000/api/authenticate'
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -263,6 +266,10 @@ async function loginMaster() {
     const errorMessageContainer = document.getElementById('error-message');
     const passwordMasterInput = document.getElementById('password-master').value;
     const sqlMasterResponse = document.getElementById('sql-master-response');
+
+    const baseURL = window.location.origin;
+    
+    console.log(baseURL);
     
     if(errorMessageContainer){
         errorMessageContainer.style.display = 'none';
@@ -273,7 +280,7 @@ async function loginMaster() {
     };
 
     try {
-        const response = await fetch('http://localhost:3000/api/authmaster', {
+        const response = await fetch(baseURL+':3000/api/authmaster', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
