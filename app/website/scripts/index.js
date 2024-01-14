@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", function() {
     loggedOutLinks();
 
-    console.log("DOM fully loaded and parsed");
+    console.log("v1");
     
 	const cachedRoute = {}; // Create a cache object
 
