@@ -27,7 +27,7 @@ const corsOpts = {
 // Use the cors middleware to enable CORS for all routes
 // app.use(cors(corsOpts));
 // Use the cors middleware to enable CORS for all routes
-// app.use(cors());
+app.use(cors());
 
 
 
