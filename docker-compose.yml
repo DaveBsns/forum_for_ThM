@@ -20,6 +20,8 @@ services:
       - ./app/website:/usr/share/nginx/html  
     ports:
       - "80:80"
+    extra_hosts:
+    - "dockerhost:$DOCKERHOST" 
 
   nodejs-api:
     build: .
