@@ -9,15 +9,26 @@ const cors = require('cors');
 const app = express();
 // app.use(express.json());
 
-// Use the cors middleware to enable CORS for all routes
-app.use(cors());
-/*
-app.use(cors({
+
+
+const corsOpts = {
     origin: '*',
-    methods: '*',
-    credentials: true,
-}));
-*/
+
+    methods: [
+      'GET',
+      'POST',
+    ],
+
+    allowedHeaders: [
+      'Content-Type',
+    ],
+  };
+// Use the cors middleware to enable CORS for all routes
+app.use(cors(corsOpts));
+// Use the cors middleware to enable CORS for all routes
+// app.use(cors());
+
+
 
 // Configure body-parser to handle JSON data
 app.use(bodyParser.json());
