@@ -223,7 +223,7 @@ async function login() {
     };
 
     try {
-        const response = await fetch('http://dockerhost:3000/api/authenticate', { // 'http://localhost:3000/api/authenticate'
+        const response = await fetch('http://localhost:3000/api/authenticate', { // 'http://localhost:3000/api/authenticate'
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
