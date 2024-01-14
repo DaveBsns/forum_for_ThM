@@ -92,7 +92,6 @@ app.post('/api/authenticate', async (req, res) => {
                 const token = jwt.sign({ userId: user.id, username: user.username }, secretKey, { expiresIn: '3h' });
                 
                 // Send the token as a response
-                res.json({ token });
                 res.header('Access-Control-Allow-Origin', '*'); // Set the appropriate origin(s)
                 res.header('Access-Control-Allow-Methods', '*'); // Specify the allowed methods
                 res.header('Access-Control-Allow-Headers', '*'); // Specify the allowed headers
