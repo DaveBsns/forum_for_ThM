@@ -25,7 +25,7 @@ const corsOpts = {
     ],
   };
 // Use the cors middleware to enable CORS for all routes
-app.use(cors(corsOpts));
+// app.use(cors(corsOpts));
 // Use the cors middleware to enable CORS for all routes
 // app.use(cors());
 
@@ -104,9 +104,9 @@ app.post('/api/authenticate', cors(), async (req, res) => {
                 const token = jwt.sign({ userId: user.id, username: user.username }, secretKey, { expiresIn: '3h' });
                 
                 // Send the token as a response
-                //res.header('Access-Control-Allow-Origin', '*'); // Set the appropriate origin(s)
-                //res.header('Access-Control-Allow-Methods', '*'); // Specify the allowed methods
-                //res.header('Access-Control-Allow-Headers', '*'); // Specify the allowed headers
+                res.header('Access-Control-Allow-Origin', '*'); // Set the appropriate origin(s)
+                res.header('Access-Control-Allow-Methods', '*'); // Specify the allowed methods
+                res.header('Access-Control-Allow-Headers', '*'); // Specify the allowed headers
                 res.json({ token });
 
             } else {
