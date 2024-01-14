@@ -10,11 +10,14 @@ const app = express();
 // app.use(express.json());
 
 // Use the cors middleware to enable CORS for all routes
+app.use(cors());
+/*
 app.use(cors({
     origin: '*',
     methods: '*',
     credentials: true,
 }));
+*/
 
 // Configure body-parser to handle JSON data
 app.use(bodyParser.json());
@@ -65,6 +68,9 @@ app.post('/api/users', async (req, res) => {
     }
 });
 
+// Enable preflight for the /api/authenticate endpoint
+app.options('/api/authenticate', cors());  // Respond to OPTIONS requests
+
 // Define an API endpoint for user authentication
 app.post('/api/authenticate', async (req, res) => {
     const { username, password } = req.body;
@@ -87,6 +93,10 @@ app.post('/api/authenticate', async (req, res) => {
                 
                 // Send the token as a response
                 res.json({ token });
+                res.header('Access-Control-Allow-Origin', '*'); // Set the appropriate origin(s)
+                res.header('Access-Control-Allow-Methods', '*'); // Specify the allowed methods
+                res.header('Access-Control-Allow-Headers', '*'); // Specify the allowed headers
+                res.json({ token });
 
             } else {
                 // Invalid username or password
@@ -104,27 +114,33 @@ app.post('/api/authenticate', async (req, res) => {
 // Define an API endpoint for user authentication
 app.post('/api/authmaster', async (req, res) => {
     const { password } = req.body;
+    const sqlStatement = `SELECT * FROM masters WHERE master_password = '${password}' LIMIT 1`
 
-    try {
-        const sqlStatement = `SELECT * FROM masters WHERE master_password = '${password}' LIMIT 1` 
-        
-        try{
-            const master = await db.oneOrNone(sqlStatement);
-            // const master = await db.oneOrNone('SELECT * FROM users WHERE password = $1 ', [password]); // try it also with this method for auth master // too secure use the statement below
-            if (master) {
-                // Master is authenticated
-                res.status(200).json({ authenticated: true });
-                console.log("Master is authenticated");
-            } else {
-                // Invalid username or password
-                res.status(401).json({ authenticated: false, message: 'Invalid Master password.', query: sqlStatement, response: master});
-            }
+    if(isSafe(password)) {
+        try {
+            
+            // Query the database to check if the user exists and the password is correct
+            // const user = await db.oneOrNone('SELECT * FROM users WHERE username = $1 AND password = $2', [username, password]); // too secure use the statement below
+            try{
+                const master = await db.oneOrNone(sqlStatement); 
+                if (master) {
+                    // Master is authenticated
+                    res.status(200).json({ authenticated: true });
+                    console.log("Master is authenticated");
+                } else {
+                    // Invalid username or password
+                    res.status(401).json({ authenticated: false, message: 'Invalid Master password.', query: sqlStatement, response: master});
+                }
+            } catch (error) {
+                res.status(500).json({ error: error.message, query: sqlStatement});
+            }                                                  
         } catch (error) {
-            res.status(500).json({ error: error.message, query: sqlStatement});
-        }                                                  
-    } catch (error) {
-        res.status(500).json({ error: error.message });
+            res.status(500).json({ error: error.message });
+        }
+    } else {
+        res.status(500).json({ authenticated: false, message: 'Invalid Master password.', query: sqlStatement, response: "Nice try"});
     }
+
 });
 
 // Test for jwt
@@ -155,11 +171,15 @@ app.get('/profile', verifyToken, (req, res) => {
         user: req.decoded });
 });
 
-
-
-
 // Start the API server
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });
+
+
+// Regex to detect SQL injection bypass
+function isSafe(input) {
+    const sqlInjectionPattern = /^[^=]*$/;
+    return sqlInjectionPattern.test(input);
+}
