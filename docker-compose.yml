@@ -2,7 +2,6 @@ version: '3.1'
 services:
   postgres:
     image: postgres
-    network_mode: host
     container_name: postgres-db
     environment:
       POSTGRES_PASSWORD: dbpw
@@ -10,23 +9,27 @@ services:
       POSTGRES_DB: postgres_docker
     ports:
       - "5432:5432"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     volumes:
       - ./relational_db:/docker-entrypoint-initdb.d  
     entrypoint: docker-entrypoint.sh postgres -c max_connections=100
 
   website:
     image: nginx
-    network_mode: host  
     container_name: forum-website
     volumes:
       - ./app/website:/usr/share/nginx/html  
     ports:
       - "80:80"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     
 
   nodejs-api:
     build: .
-    network_mode: host
     container_name: nodejs-api
     ports:
       - "3000:3000" 
+    extra_hosts:
+      - "host.docker.internal:host-gateway"

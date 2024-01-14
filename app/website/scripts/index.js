@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", function() {
     loggedOutLinks();
 
-    console.log("v3");
+    console.log("v66");
     
 	const cachedRoute = {}; // Create a cache object
 
@@ -223,7 +223,7 @@ async function login() {
     };
 
     try {
-        const response = await fetch('http://localhost:3000/api/authenticate', { // 'http://localhost:3000/api/authenticate'
+        const response = await fetch('http://host.docker.internal:3000/api/authenticate', { // 'http://localhost:3000/api/authenticate'
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
